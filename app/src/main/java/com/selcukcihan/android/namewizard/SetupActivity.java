@@ -19,6 +19,7 @@ package com.selcukcihan.android.namewizard;
 import com.selcukcihan.android.namewizard.wizard.model.AbstractWizardModel;
 import com.selcukcihan.android.namewizard.wizard.model.ModelCallbacks;
 import com.selcukcihan.android.namewizard.wizard.model.Page;
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
 import com.selcukcihan.android.namewizard.wizard.ui.PageFragmentCallbacks;
 import com.selcukcihan.android.namewizard.wizard.ui.ReviewFragment;
 import com.selcukcihan.android.namewizard.wizard.ui.StepPagerStrip;
@@ -26,7 +27,11 @@ import com.selcukcihan.android.namewizard.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -105,17 +110,23 @@ public class SetupActivity extends FragmentActivity implements
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-                    DialogFragment dg = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                            return new AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.submit_confirm_message)
-                                    .setPositiveButton(R.string.submit_confirm_button, null)
-                                    .setNegativeButton(android.R.string.cancel, null)
-                                    .create();
-                        }
-                    };
-                    dg.show(getSupportFragmentManager(), "place_order_dialog");
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.this);
+                    SharedPreferences.Editor editor = prefs.edit();
+
+                    Bundle bundle = mWizardModel.save();
+                    UserData data = new UserData(bundle);
+                    editor.putString("saved_mother", data.getMother());
+                    editor.putString("saved_father", data.getFather());
+                    editor.putString("saved_surname", data.getSurname());
+                    editor.putInt("saved_month", data.getMonth());
+                    editor.putInt("saved_day", data.getDay());
+                    editor.putBoolean("saved_gender", data.isMale());
+                    editor.commit();
+
+                    Intent output = new Intent();
+                    output.putExtra(MainActivity.USER_DATA_KEY, bundle);
+                    setResult(RESULT_OK, output);
+                    finish();
                 } else {
                     if (mEditingAfterReview) {
                         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);

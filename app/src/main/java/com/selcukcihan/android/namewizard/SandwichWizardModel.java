@@ -17,10 +17,12 @@
 package com.selcukcihan.android.namewizard;
 
 import com.selcukcihan.android.namewizard.wizard.model.AbstractWizardModel;
+import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
 import com.selcukcihan.android.namewizard.wizard.model.BranchPage;
 import com.selcukcihan.android.namewizard.wizard.model.CustomerInfoPage;
 import com.selcukcihan.android.namewizard.wizard.model.MultipleFixedChoicePage;
 import com.selcukcihan.android.namewizard.wizard.model.PageList;
+import com.selcukcihan.android.namewizard.wizard.model.ParentNamesPage;
 import com.selcukcihan.android.namewizard.wizard.model.SingleFixedChoicePage;
 
 import android.content.Context;
@@ -33,47 +35,9 @@ public class SandwichWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new BranchPage(this, "Order type")
-                        .addBranch("Sandwich",
-                                new SingleFixedChoicePage(this, "Bread")
-                                        .setChoices("White", "Wheat", "Rye", "Pretzel", "Ciabatta")
-                                        .setRequired(true),
-
-                                new MultipleFixedChoicePage(this, "Meats")
-                                        .setChoices("Pepperoni", "Turkey", "Ham", "Pastrami",
-                                                "Roast Beef", "Bologna"),
-
-                                new MultipleFixedChoicePage(this, "Veggies")
-                                        .setChoices("Tomatoes", "Lettuce", "Onions", "Pickles",
-                                                "Cucumbers", "Peppers"),
-
-                                new MultipleFixedChoicePage(this, "Cheeses")
-                                        .setChoices("Swiss", "American", "Pepperjack", "Muenster",
-                                                "Provolone", "White American", "Cheddar", "Bleu"),
-
-                                new BranchPage(this, "Toasted?")
-                                        .addBranch("Yes",
-                                                new SingleFixedChoicePage(this, "Toast time")
-                                                        .setChoices("30 seconds", "1 minute",
-                                                                "2 minutes"))
-                                        .addBranch("No")
-                                        .setValue("No"))
-
-                        .addBranch("Salad",
-                                new SingleFixedChoicePage(this, "Salad type")
-                                        .setChoices("Greek", "Caesar")
-                                        .setRequired(true),
-
-                                new SingleFixedChoicePage(this, "Dressing")
-                                        .setChoices("No dressing", "Balsamic", "Oil & vinegar",
-                                                "Thousand Island", "Italian")
-                                        .setValue("No dressing")
-                        )
-
-                        .setRequired(true),
-
-                new CustomerInfoPage(this, "Your info")
-                        .setRequired(true)
+                new SingleFixedChoicePage(this, "Gender").setChoices("Male", "Female").setRequired(true),
+                new BirthDatePage(this, "Expected Birth Date").setRequired(true),
+                new ParentNamesPage(this, "Family Names")
         );
     }
 }
