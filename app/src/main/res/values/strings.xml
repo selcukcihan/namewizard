@@ -6,11 +6,6 @@
     <string name="finish">Submit order</string>
     <string name="review">Review</string>
 
-    <string name="label_your_name">Name</string>
-    <string name="label_your_email">Email</string>
-    <string name="hint_your_name">e.g. Larry</string>
-    <string name="hint_your_email">Optional</string>
-
     <string name="submit_confirm_message">Place the order with the deli? You will receive an email
         confirmation.</string>
     <string name="submit_confirm_button">Place order</string>
@@ -21,5 +16,14 @@
     <string name="label_surname">Family Name</string>
     <string name="hint_surname">Surname of baby</string>
     <string name="label_birth_date">Expected Birth Date</string>
+
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gender">Gender</string>
+    <string name="birth_date">Expected Birth Date</string>
+    <string name="family_names">Family Names</string>
 
 </resources>

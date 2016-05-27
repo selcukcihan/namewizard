@@ -17,9 +17,7 @@
 package com.selcukcihan.android.namewizard.wizard.model;
 
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 
-import com.selcukcihan.android.namewizard.wizard.ui.CustomerInfoFragment;
 import com.selcukcihan.android.namewizard.wizard.ui.ParentNamesFragment;
 
 import java.util.ArrayList;

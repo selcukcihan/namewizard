@@ -17,23 +17,18 @@
 package com.selcukcihan.android.namewizard.wizard.ui;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.selcukcihan.android.namewizard.R;
 import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
-import com.selcukcihan.android.namewizard.wizard.model.CustomerInfoPage;
-import com.selcukcihan.android.namewizard.wizard.model.ParentNamesPage;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;

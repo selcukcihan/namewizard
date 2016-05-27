@@ -18,9 +18,6 @@ package com.selcukcihan.android.namewizard;
 
 import com.selcukcihan.android.namewizard.wizard.model.AbstractWizardModel;
 import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
-import com.selcukcihan.android.namewizard.wizard.model.BranchPage;
-import com.selcukcihan.android.namewizard.wizard.model.CustomerInfoPage;
-import com.selcukcihan.android.namewizard.wizard.model.MultipleFixedChoicePage;
 import com.selcukcihan.android.namewizard.wizard.model.PageList;
 import com.selcukcihan.android.namewizard.wizard.model.ParentNamesPage;
 import com.selcukcihan.android.namewizard.wizard.model.SingleFixedChoicePage;
@@ -35,9 +32,11 @@ public class SandwichWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new SingleFixedChoicePage(this, "Gender").setChoices("Male", "Female").setRequired(true),
-                new BirthDatePage(this, "Expected Birth Date").setRequired(true),
-                new ParentNamesPage(this, "Family Names")
+                new SingleFixedChoicePage(this, mContext.getString(R.string.gender)).setChoices(
+                        mContext.getString(R.string.male),
+                        mContext.getString(R.string.female)).setRequired(true),
+                new BirthDatePage(this, mContext.getString(R.string.birth_date)).setRequired(true),
+                new ParentNamesPage(this, mContext.getString(R.string.family_names))
         );
     }
 }

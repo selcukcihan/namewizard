@@ -110,22 +110,9 @@ public class SetupActivity extends FragmentActivity implements
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(SetupActivity.this);
-                    SharedPreferences.Editor editor = prefs.edit();
-
                     Bundle bundle = mWizardModel.save();
                     UserData data = new UserData(bundle);
-                    editor.putString("saved_mother", data.getMother());
-                    editor.putString("saved_father", data.getFather());
-                    editor.putString("saved_surname", data.getSurname());
-                    editor.putInt("saved_month", data.getMonth());
-                    editor.putInt("saved_day", data.getDay());
-                    editor.putBoolean("saved_gender", data.isMale());
-                    editor.commit();
-
-                    Intent output = new Intent();
-                    output.putExtra(MainActivity.USER_DATA_KEY, bundle);
-                    setResult(RESULT_OK, output);
+                    data.persist(PreferenceManager.getDefaultSharedPreferences(SetupActivity.this).edit());
                     finish();
                 } else {
                     if (mEditingAfterReview) {
