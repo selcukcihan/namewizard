@@ -104,7 +104,7 @@ public class BirthDateFragment extends Fragment {
                 mPage.notifyDataChanged();
             }
         });
-        hideYear();
+        hideYear(mBirthDate);
     }
 
     @Override
@@ -122,19 +122,19 @@ public class BirthDateFragment extends Fragment {
         }*/
     }
 
-    public void hideYear(){
+    public static void hideYear(View view){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             int yearSpinnerId = Resources.getSystem().getIdentifier("year", "id", "android");
             if (yearSpinnerId != 0)
             {
-                View yearSpinner = mBirthDate.findViewById(yearSpinnerId);
+                View yearSpinner = view.findViewById(yearSpinnerId);
                 if (yearSpinner != null)
                 {
                     yearSpinner.setVisibility(View.GONE);
                 }
             }
         } else { //Older SDK versions
-            Field f[] = mBirthDate.getClass().getDeclaredFields();
+            Field f[] = view.getClass().getDeclaredFields();
             for (Field field : f)
             {
                 if(field.getName().equals("mYearPicker") || field.getName().equals("mYearSpinner"))
@@ -142,7 +142,7 @@ public class BirthDateFragment extends Fragment {
                     field.setAccessible(true);
                     Object yearPicker = null;
                     try {
-                        yearPicker = field.get(mBirthDate);
+                        yearPicker = field.get(view);
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }

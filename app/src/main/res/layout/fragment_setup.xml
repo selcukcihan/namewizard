@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.selcukcihan.android.namewizard.SetupFragment">
+    tools:context="com.selcukcihan.android.namewizard.SetupFragment"><!--
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -21,6 +21,24 @@
             android:layout_gravity="right"
             android:saveEnabled="false"
             android:scrollbarStyle="outsideOverlay" />
+    </LinearLayout>-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:text="@string/label_birth_date"/>
+        <DatePicker android:id="@+id/birth_date"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
@@ -28,13 +46,13 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center_vertical"
             android:text="@string/label_mother_name"/>
         <EditText android:id="@+id/mother"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:saveEnabled="false"
@@ -46,13 +64,13 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center_vertical"
             android:text="@string/label_father_name"/>
         <EditText android:id="@+id/father"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:saveEnabled="false"
@@ -64,16 +82,34 @@
         android:orientation="horizontal">
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center_vertical"
             android:text="@string/label_surname"/>
         <EditText android:id="@+id/surname"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:saveEnabled="false"
             android:inputType="textPersonName|textCapWords"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:padding="6dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="Kaydet"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_weight="1" />
+
     </LinearLayout>
 </LinearLayout>

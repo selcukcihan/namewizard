@@ -10,18 +10,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
 import com.selcukcihan.android.namewizard.wizard.model.Page;
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
+import com.selcukcihan.android.namewizard.wizard.ui.BirthDateFragment;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 
 public class SetupFragment extends Fragment {
     private UserData mUserData = null;
+    private int mMonth;
+    private int mDay;
 
     public SetupFragment() {
         // Required empty public constructor
@@ -49,6 +56,20 @@ public class SetupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_setup, container, false);
+
+        Calendar calendar = Calendar.getInstance();
+        DatePicker picker = (DatePicker) rootView.findViewById(R.id.birth_date);
+        mMonth = mUserData.getMonth();
+        mDay = mUserData.getDay();
+        picker.init(mUserData.getDay(), mUserData.getMonth(), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mMonth = monthOfYear;
+                mDay = dayOfMonth;
+            }
+        });
+        BirthDateFragment.hideYear(picker);
+
         ((EditText) rootView.findViewById(R.id.mother)).setText(mUserData.getMother());
         ((EditText) rootView.findViewById(R.id.father)).setText(mUserData.getFather());
         ((EditText) rootView.findViewById(R.id.surname)).setText(mUserData.getSurname());
@@ -63,6 +84,7 @@ public class SetupFragment extends Fragment {
                 android.R.id.text1,
                 genders));
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setSelection(mUserData.isMale() ? 0 : 1);
 
         // Pre-select currently selected item.
         new Handler().post(new Runnable() {
@@ -74,6 +96,19 @@ public class SetupFragment extends Fragment {
                         break;
                     }
                 }
+            }
+        });
+
+        final Button button = (Button) rootView.findViewById(R.id.buttonSave);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                mUserData = new UserData(
+                        (((ListView)SetupFragment.this.getView().findViewById(android.R.id.list)).getSelectedItemPosition() == 0),
+                        ((TextView) SetupFragment.this.getView().findViewById(R.id.mother)).getText().toString(),
+                        ((TextView) SetupFragment.this.getView().findViewById(R.id.father)).getText().toString(),
+                        ((TextView) SetupFragment.this.getView().findViewById(R.id.surname)).getText().toString(),
+                        mMonth,
+                        mDay);
             }
         });
 
