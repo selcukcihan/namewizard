@@ -25,10 +25,11 @@ import java.util.Random;
 public class NameEngine {
     private final Context mContext;
     private final UserData mUserData;
-    private final List<List<String>> mNames;
+    private final List<List<Name>> mNames;
     private final int[] mFrequencies = {8, 4, 2, 1};
     private final Random mRandom;
     private int mCount = 0;
+    private List<Name> mCurrentlyFetched;
 
     public NameEngine(Context context, UserData userData) {
         mContext = context;
@@ -36,9 +37,9 @@ public class NameEngine {
         mNames = new ArrayList<>(4);
         mRandom = new Random(seed());
         for (int i = 0; i < mFrequencies.length; i++) {
-            mNames.add(new LinkedList<String>());
+            mNames.add(new LinkedList<Name>());
         }
-        initializeData(userData.isMale() ? "male.txt" : "female.txt");
+        initializeData("names.txt");
     }
 
     private int seed() {
@@ -58,11 +59,11 @@ public class NameEngine {
         return (mUserData.getMonth() * 31 + mUserData.getDay() + (mUserData.isMale() ? 1000 : 500) + hash * 10000);
     }
 
-    private String getNameFrom(int bucketIndex) {
-        List<String> bucket = mNames.get(bucketIndex);
+    private Name getNameFrom(int bucketIndex) {
+        List<Name> bucket = mNames.get(bucketIndex);
         int index = mRandom.nextInt(bucket.size());
-        String name = bucket.get(index);
-        if (Arrays.asList(new String[] {mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name)) {
+        Name name = bucket.get(index);
+        if (Arrays.asList(new String[] {mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name.toString())) {
             return getNameFrom(bucketIndex);
         } else {
             //bucket.remove(index);
@@ -70,8 +71,23 @@ public class NameEngine {
         }
     }
 
-    public List<String> fetch() {
-        List<String> names = new LinkedList<>();
+    public void next() {
+        mCurrentlyFetched = fetch();
+    }
+
+    public int count() {
+        return mCurrentlyFetched.size();
+    }
+
+    public Name get(int position) {
+        if (position < mCurrentlyFetched.size()) {
+            return mCurrentlyFetched.get(position);
+        }
+        return null;
+    }
+
+    public List<Name> fetch() {
+        List<Name> names = new LinkedList<>();
         for (int i = 0; i < 6; i++) {
             mCount++;
             for (int j = 0; j < mFrequencies.length; j++) {
@@ -92,14 +108,16 @@ public class NameEngine {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] tokens = line.split(" ");
-                long freq = Long.parseLong(tokens[1]);
+                long freq = Long.parseLong(tokens[2]);
                 int index = (int)(Math.round(Math.log10(freq / 10000)));
                 if (index < 0) {
                     index = 0;
                 } else if (index >= mNames.size()) {
                     index = mNames.size() - 1;
                 }
-                mNames.get(index).add(tokens[0]);
+                if (Boolean.parseBoolean(tokens[1]) == mUserData.isMale()) {
+                    mNames.get(index).add(new Name(tokens[0], mUserData.isMale(), freq, tokens[3]));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

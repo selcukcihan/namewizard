@@ -2,27 +2,30 @@ package com.selcukcihan.android.namewizard;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 
-public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, HttpPerformingTask.HttpPerformingTaskListener {
     public static final int USER_DATA_REQUEST = 1;
 
     private ListView mListView;
     private SwipeRefreshLayout mSwipe;
     private NameEngine mEngine;
     private UserData mUserData;
+    private RecyclerView mList;
 
     public NameFragment() {
         // Required empty public constructor
@@ -36,10 +39,13 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_name, container, false);
+        View view = inflater.inflate(R.layout.fragment_name_list, container, false);
+        mList = (RecyclerView) view.findViewById(R.id.list);
 
-        mListView = (ListView) view.findViewById(R.id.list_names);
+        mList.setLayoutManager(new LinearLayoutManager(mList.getContext()));
+        mList.addItemDecoration(new DividerItemDecoration(getActivity()));
+
+        //mListView = (ListView) view.findViewById(R.id.list_names);
         mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
         mSwipe.setOnRefreshListener(this);
 
@@ -59,7 +65,6 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("MainActivity", "onResume called");
         initializeData();
     }
 
@@ -69,17 +74,14 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void refreshData() {
-        //ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, R.layout.list_item, generateNames());
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) mListView.getAdapter();
-        adapter.clear();
-        adapter.addAll(mEngine.fetch());
-        adapter.notifyDataSetChanged();
+        mEngine.next();
+        mList.getAdapter().notifyDataSetChanged();
         mSwipe.setRefreshing(false);
     }
 
     public void initializeWidgets() {
         mEngine = new NameEngine(getContext(), mUserData);
-        mListView.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.list_item));
+        mList.setAdapter(new NameAdapter(this, mEngine));
 
         mSwipe.post(new Runnable() {
             @Override
@@ -98,5 +100,17 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             Intent intent = new Intent(getContext(), SetupActivity.class);
             startActivityForResult(intent, USER_DATA_REQUEST);
         }
+    }
+
+    @Override
+    public void onCompleted(String meaning) {
+        Toast toast = Toast.makeText(getContext(), meaning, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
+    @Override
+    public void onFailure(String message) {
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

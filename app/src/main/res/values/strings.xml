@@ -9,13 +9,13 @@
     <string name="submit_confirm_message">Place the order with the deli? You will receive an email
         confirmation.</string>
     <string name="submit_confirm_button">Place order</string>
-    <string name="label_mother_name">Mother\'s Name</string>
+    <string name="label_mother_name">Mother</string>
     <string name="hint_mother_name">Name of the mother</string>
-    <string name="label_father_name">Father\'s Name</string>
+    <string name="label_father_name">Father</string>
     <string name="hint_father_name">Name of the father</string>
     <string name="label_surname">Family Name</string>
     <string name="hint_surname">Surname of baby</string>
-    <string name="label_birth_date">Expected Birth Date</string>
+    <string name="label_birth_date">Birth Date</string>
 
     <string name="male">Male</string>
     <string name="female">Female</string>
@@ -25,5 +25,6 @@
     <string name="gender">Gender</string>
     <string name="birth_date">Expected Birth Date</string>
     <string name="family_names">Family Names</string>
+    <string name="waiting">(%1$s) adının anlamı araştırılıyor.</string>
 
 </resources>

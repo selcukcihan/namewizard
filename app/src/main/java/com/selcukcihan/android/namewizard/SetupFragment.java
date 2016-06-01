@@ -109,6 +109,7 @@ public class SetupFragment extends Fragment {
                         ((TextView) SetupFragment.this.getView().findViewById(R.id.surname)).getText().toString(),
                         mMonth,
                         mDay);
+                mUserData.persist(PreferenceManager.getDefaultSharedPreferences(SetupFragment.this.getActivity()).edit());
             }
         });
 
