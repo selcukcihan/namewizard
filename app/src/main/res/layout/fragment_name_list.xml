@@ -23,5 +23,4 @@
             tools:listitem="@layout/fragment_name" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 </FrameLayout>

@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.selcukcihan.android.namewizard.R;
 import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
@@ -60,6 +61,12 @@ public class BirthDateFragment extends Fragment {
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
         mPage = (BirthDatePage) mCallbacks.onGetPage(mKey);
+
+        UserData data = UserData.newInstance(this.getContext());
+        if (data != null) {
+            mPage.getData().putInt(BirthDatePage.MONTH_KEY, data.getMonth());
+            mPage.getData().putInt(BirthDatePage.DAY_KEY, data.getDay());
+        }
     }
 
     @Override
@@ -95,7 +102,8 @@ public class BirthDateFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Calendar calendar = Calendar.getInstance();
-        mBirthDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+        //mBirthDate.init(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener() {
+        mBirthDate.init(calendar.get(Calendar.YEAR), mPage.getData().getInt(BirthDatePage.MONTH_KEY), mPage.getData().getInt(BirthDatePage.DAY_KEY), new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int year, int month, int dayOfMonth) {
                 mPage.getData().putInt(BirthDatePage.YEAR_KEY, year);

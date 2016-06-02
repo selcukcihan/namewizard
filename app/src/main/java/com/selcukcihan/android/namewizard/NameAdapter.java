@@ -38,7 +38,7 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.ViewHolder> {
             public void onClick(View v) {
                 HttpPerformingTask task = new HttpPerformingTask(mEngine.get(position));
                 task.attach(mNameFragment);
-                task.execute(mEngine.get(position));
+                task.execute();
             }
         });
     }

@@ -8,22 +8,32 @@
     android:fitsSystemWindows="true"
     tools:context="com.selcukcihan.android.namewizard.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            style="@style/MyCustomTabLayout"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="4dp"/>
+            android:theme="@style/AppTheme.AppBarOverlay">
+            <include layout="@layout/custom_toolbar" />
+        </android.support.design.widget.AppBarLayout>
 
-    </android.support.design.widget.AppBarLayout>
+        <fragment android:name="com.selcukcihan.android.namewizard.NameFragment"
+            android:id="@+id/article_fragment"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:layout="@layout/fragment_name_list" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"  />
+        <ImageButton
+            android:id="@+id/setup"
+            android:layout_gravity="bottom|right"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@drawable/backgroundstate"
+            android:src="@drawable/ic_settings_applications_black_36dp"/>
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

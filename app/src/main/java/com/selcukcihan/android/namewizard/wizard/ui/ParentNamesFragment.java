@@ -27,7 +27,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.selcukcihan.android.namewizard.R;
+import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
 import com.selcukcihan.android.namewizard.wizard.model.ParentNamesPage;
+import com.selcukcihan.android.namewizard.wizard.model.SingleFixedChoicePage;
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 public class ParentNamesFragment extends Fragment {
     private static final String ARG_KEY = "key";
@@ -58,6 +61,13 @@ public class ParentNamesFragment extends Fragment {
         Bundle args = getArguments();
         mKey = args.getString(ARG_KEY);
         mPage = (ParentNamesPage) mCallbacks.onGetPage(mKey);
+
+        UserData data = UserData.newInstance(this.getContext());
+        if (data != null) {
+            mPage.getData().putString(ParentNamesPage.MOTHER_DATA_KEY, data.getMother());
+            mPage.getData().putString(ParentNamesPage.FATHER_DATA_KEY, data.getFather());
+            mPage.getData().putString(ParentNamesPage.SURNAME_DATA_KEY, data.getSurname());
+        }
     }
 
     @Override
@@ -67,13 +77,8 @@ public class ParentNamesFragment extends Fragment {
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
         mMotherView = ((TextView) rootView.findViewById(R.id.mother));
-        mMotherView.setText(mPage.getData().getString(ParentNamesPage.MOTHER_DATA_KEY));
-
         mFatherView = ((TextView) rootView.findViewById(R.id.father));
-        mFatherView.setText(mPage.getData().getString(ParentNamesPage.FATHER_DATA_KEY));
-
         mSurnameView = ((TextView) rootView.findViewById(R.id.surname));
-        mSurnameView.setText(mPage.getData().getString(ParentNamesPage.SURNAME_DATA_KEY));
 
         return rootView;
     }
@@ -98,6 +103,12 @@ public class ParentNamesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (mPage.getData().containsKey(ParentNamesPage.MOTHER_DATA_KEY)) {
+            mMotherView.setText(mPage.getData().getString(ParentNamesPage.MOTHER_DATA_KEY));
+            mFatherView.setText(mPage.getData().getString(ParentNamesPage.FATHER_DATA_KEY));
+            mSurnameView.setText(mPage.getData().getString(ParentNamesPage.SURNAME_DATA_KEY));
+        }
 
         mMotherView.addTextChangedListener(new NameTextWatcher(mPage, ParentNamesPage.MOTHER_DATA_KEY));
         mFatherView.addTextChangedListener(new NameTextWatcher(mPage, ParentNamesPage.FATHER_DATA_KEY));

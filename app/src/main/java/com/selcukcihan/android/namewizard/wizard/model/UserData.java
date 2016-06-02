@@ -29,13 +29,17 @@ public class UserData implements Parcelable {
         mMale = male;
     }
 
-    public UserData(Bundle data) {
-        mMother = data.getString(ParentNamesPage.MOTHER_DATA_KEY);
-        mFather = data.getString(ParentNamesPage.FATHER_DATA_KEY);
-        mSurname = data.getString(ParentNamesPage.SURNAME_DATA_KEY);
-        mMonth = data.getInt(BirthDatePage.MONTH_KEY);
-        mDay = data.getInt(BirthDatePage.DAY_KEY);
-        mMale = data.getBoolean(Page.SIMPLE_DATA_KEY);
+    public UserData(Bundle data, Context context) {
+        Bundle date = data.getBundle(context.getString(R.string.birth_date));
+        Bundle names = data.getBundle(context.getString(R.string.family_names));
+        Bundle gender = data.getBundle(context.getString(R.string.gender));
+
+        mMother = names.getString(ParentNamesPage.MOTHER_DATA_KEY);
+        mFather = names.getString(ParentNamesPage.FATHER_DATA_KEY);
+        mSurname = names.getString(ParentNamesPage.SURNAME_DATA_KEY);
+        mMonth = date.getInt(BirthDatePage.MONTH_KEY);
+        mDay = date.getInt(BirthDatePage.DAY_KEY);
+        mMale = gender.getBoolean(Page.SIMPLE_DATA_KEY);
     }
 
     public UserData(Parcel in){

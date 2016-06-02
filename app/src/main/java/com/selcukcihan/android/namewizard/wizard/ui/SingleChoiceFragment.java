@@ -17,8 +17,10 @@
 package com.selcukcihan.android.namewizard.wizard.ui;
 
 import com.selcukcihan.android.namewizard.R;
+import com.selcukcihan.android.namewizard.wizard.model.BirthDatePage;
 import com.selcukcihan.android.namewizard.wizard.model.Page;
 import com.selcukcihan.android.namewizard.wizard.model.SingleFixedChoicePage;
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,10 +30,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SingleChoiceFragment extends ListFragment {
@@ -41,6 +45,8 @@ public class SingleChoiceFragment extends ListFragment {
     private List<String> mChoices;
     private String mKey;
     private Page mPage;
+
+    private ListView mListView;
 
     public static SingleChoiceFragment create(String key) {
         Bundle args = new Bundle();
@@ -67,6 +73,11 @@ public class SingleChoiceFragment extends ListFragment {
         for (int i = 0; i < fixedChoicePage.getOptionCount(); i++) {
             mChoices.add(fixedChoicePage.getOptionAt(i));
         }
+
+        UserData data = UserData.newInstance(this.getContext());
+        if (data != null) {
+            mPage.getData().putBoolean(SingleFixedChoicePage.SIMPLE_DATA_KEY, data.isMale());
+        }
     }
 
     @Override
@@ -75,28 +86,23 @@ public class SingleChoiceFragment extends ListFragment {
         View rootView = inflater.inflate(R.layout.fragment_page, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        final ListView listView = (ListView) rootView.findViewById(android.R.id.list);
+        mListView = (ListView) rootView.findViewById(android.R.id.list);
         setListAdapter(new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_single_choice,
                 android.R.id.text1,
                 mChoices));
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        // Pre-select currently selected item.
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                String selection = mPage.getData().getString(Page.SIMPLE_DATA_KEY);
-                for (int i = 0; i < mChoices.size(); i++) {
-                    if (mChoices.get(i).equals(selection)) {
-                        listView.setItemChecked(i, true);
-                        break;
-                    }
-                }
-            }
-        });
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (mPage.getData().containsKey(SingleFixedChoicePage.SIMPLE_DATA_KEY)) {
+            int selection = (mPage.getData().getBoolean(Page.SIMPLE_DATA_KEY) ? 0 : 1);
+            mListView.setItemChecked(selection, true);
+        }
     }
 
     @Override
@@ -118,8 +124,8 @@ public class SingleChoiceFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        mPage.getData().putString(Page.SIMPLE_DATA_KEY,
-                getListAdapter().getItem(position).toString());
+        mPage.getData().putBoolean(Page.SIMPLE_DATA_KEY,
+                position == 0);
         mPage.notifyDataChanged();
     }
 }

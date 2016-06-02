@@ -54,7 +54,7 @@ public class SetupActivity extends FragmentActivity implements
 
     private boolean mEditingAfterReview;
 
-    private AbstractWizardModel mWizardModel = new SandwichWizardModel(this);
+    private AbstractWizardModel mWizardModel;
 
     private boolean mConsumePageSelectedEvent;
 
@@ -68,6 +68,7 @@ public class SetupActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
+        mWizardModel = new SandwichWizardModel(this);
         if (savedInstanceState != null) {
             mWizardModel.load(savedInstanceState.getBundle("model"));
         }
@@ -111,7 +112,7 @@ public class SetupActivity extends FragmentActivity implements
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
                     Bundle bundle = mWizardModel.save();
-                    UserData data = new UserData(bundle);
+                    UserData data = new UserData(bundle, SetupActivity.this);
                     data.persist(PreferenceManager.getDefaultSharedPreferences(SetupActivity.this).edit());
                     finish();
                 } else {

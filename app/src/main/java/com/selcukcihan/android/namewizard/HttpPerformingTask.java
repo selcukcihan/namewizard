@@ -33,7 +33,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by SELCUKCI on 16.2.2016.
  */
-public class HttpPerformingTask extends AsyncTask<Name, Void, String> {
+public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
 
     private ProgressDialog mDialog;
     private Name mName;
@@ -56,9 +56,11 @@ public class HttpPerformingTask extends AsyncTask<Name, Void, String> {
     }
 
     private Exception mException;
-    protected String doInBackground(Name... params) {
+    protected String doInBackground(Void... params) {
         try {
-            mName = params[0];
+            if (mName == null) {
+                return "";
+            }
             if (mName.meaning().isEmpty()) {
                 HttpCommunicator communicator = new HttpCommunicator();
 
@@ -75,8 +77,10 @@ public class HttpPerformingTask extends AsyncTask<Name, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        mDialog.setMessage(String.format(mDialog.getContext().getResources().getString(R.string.waiting), mName.toString()));
-        mDialog.show();
+        if (mName != null) {
+            mDialog.setMessage(String.format(mDialog.getContext().getResources().getString(R.string.waiting), mName.toString()));
+            mDialog.show();
+        }
     }
 
     public Exception getException() { return mException; }
@@ -92,7 +96,7 @@ public class HttpPerformingTask extends AsyncTask<Name, Void, String> {
         } else {
             if (mException != null) {
                 mListener.onFailure(mException.getLocalizedMessage());
-            } else {
+            } else if (mName != null) {
                 mListener.onFailure("name not found");
             }
         }

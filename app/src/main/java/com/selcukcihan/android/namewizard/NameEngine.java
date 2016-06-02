@@ -61,13 +61,17 @@ public class NameEngine {
 
     private Name getNameFrom(int bucketIndex) {
         List<Name> bucket = mNames.get(bucketIndex);
-        int index = mRandom.nextInt(bucket.size());
-        Name name = bucket.get(index);
-        if (Arrays.asList(new String[] {mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name.toString())) {
-            return getNameFrom(bucketIndex);
+        if (bucket.size() > 0) {
+            int index = mRandom.nextInt(bucket.size());
+            Name name = bucket.get(index);
+            if (Arrays.asList(new String[]{mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name.toString())) {
+                return getNameFrom(bucketIndex);
+            } else {
+                //bucket.remove(index);
+                return name;
+            }
         } else {
-            //bucket.remove(index);
-            return name;
+            return null;
         }
     }
 
@@ -92,7 +96,10 @@ public class NameEngine {
             mCount++;
             for (int j = 0; j < mFrequencies.length; j++) {
                 if (mCount % mFrequencies[j] == 0) {
-                    names.add(getNameFrom(j));
+                    Name name = getNameFrom(j);
+                    if (name != null) {
+                        names.add(name);
+                    }
                     break;
                 }
             }
@@ -115,7 +122,7 @@ public class NameEngine {
                 } else if (index >= mNames.size()) {
                     index = mNames.size() - 1;
                 }
-                if (Boolean.parseBoolean(tokens[1]) == mUserData.isMale()) {
+                if ((tokens[1].compareTo("1") == 0) == mUserData.isMale()) {
                     mNames.get(index).add(new Name(tokens[0], mUserData.isMale(), freq, tokens[3]));
                 }
             }

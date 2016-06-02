@@ -30,7 +30,7 @@ public class NameTextWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable editable) {
-        mPage.getData().putString(ParentNamesPage.MOTHER_DATA_KEY,
+        mPage.getData().putString(mKey,
                 (editable != null) ? editable.toString() : null);
         mPage.notifyDataChanged();
     }

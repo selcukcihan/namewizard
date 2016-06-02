@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -82,6 +83,14 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void initializeWidgets() {
         mEngine = new NameEngine(getContext(), mUserData);
         mList.setAdapter(new NameAdapter(this, mEngine));
+
+        ImageView icon = (ImageView) this.getActivity().findViewById(R.id.toolbar_icon);
+        if (mUserData.isMale()) {
+            icon.setImageResource(R.drawable.ic_gender_male_white_36dp);
+        } else {
+            icon.setImageResource(R.drawable.ic_gender_female_white_36dp);
+        }
+        //icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female_white_36dp, getApplicationContext().getTheme()));
 
         mSwipe.post(new Runnable() {
             @Override
