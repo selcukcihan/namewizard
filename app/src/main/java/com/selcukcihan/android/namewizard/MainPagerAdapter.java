@@ -21,7 +21,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return NameFragment.newInstance(mContext);
             case 1:
-                return SetupFragment.newInstance(mContext);
+                return ShortlistFragment.newInstance(mContext);
             default:
                 return null;
         }
@@ -36,9 +36,9 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return "Names";
+            return mContext.getString(R.string.suggestions);
         } else {
-            return "Setup";
+            return mContext.getString(R.string.shortlist);
         }
         /*
         Drawable image = ContextCompat.getDrawable(mContext, mPages.get(position).getIconId());

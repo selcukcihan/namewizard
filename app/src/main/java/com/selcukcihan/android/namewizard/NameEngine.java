@@ -22,9 +22,7 @@ import java.util.Random;
 /**
  * Created by SELCUKCI on 27.5.2016.
  */
-public class NameEngine {
-    private final Context mContext;
-    private final UserData mUserData;
+public class NameEngine extends NameCollection {
     private final List<List<Name>> mNames;
     private final int[] mFrequencies = {8, 4, 2, 1};
     private final Random mRandom;
@@ -32,8 +30,8 @@ public class NameEngine {
     private List<Name> mCurrentlyFetched;
 
     public NameEngine(Context context, UserData userData) {
-        mContext = context;
-        mUserData = userData;
+        super(context, userData);
+
         mNames = new ArrayList<>(4);
         mRandom = new Random(seed());
         for (int i = 0; i < mFrequencies.length; i++) {
@@ -75,14 +73,26 @@ public class NameEngine {
         }
     }
 
+    public LinkedList<Name> getAll() {
+        LinkedList<Name> names = new LinkedList<>();
+        for (List<Name> n : mNames) {
+            names.addAll(n);
+        }
+        Collections.sort(names);
+        return names;
+    }
+
+    @Override
     public void next() {
         mCurrentlyFetched = fetch();
     }
 
+    @Override
     public int count() {
         return mCurrentlyFetched.size();
     }
 
+    @Override
     public Name get(int position) {
         if (position < mCurrentlyFetched.size()) {
             return mCurrentlyFetched.get(position);

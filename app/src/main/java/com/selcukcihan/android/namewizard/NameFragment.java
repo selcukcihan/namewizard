@@ -19,14 +19,9 @@ import android.widget.Toast;
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 
-public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, HttpPerformingTask.HttpPerformingTaskListener {
-    public static final int USER_DATA_REQUEST = 1;
+public class NameFragment extends ShortlistFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView mListView;
     private SwipeRefreshLayout mSwipe;
-    private NameEngine mEngine;
-    private UserData mUserData;
-    private RecyclerView mList;
 
     public NameFragment() {
         // Required empty public constructor
@@ -38,51 +33,26 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_name_list, container, false);
-        mList = (RecyclerView) view.findViewById(R.id.list);
-
-        mList.setLayoutManager(new LinearLayoutManager(mList.getContext()));
-        mList.addItemDecoration(new DividerItemDecoration(getActivity()));
-
-        //mListView = (ListView) view.findViewById(R.id.list_names);
-        mSwipe = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
-        mSwipe.setOnRefreshListener(this);
-
-        return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initializeData();
-    }
-
-    @Override
     public void onRefresh() {
         refreshData();
     }
 
+    @Override
+    protected void initializeData() {
+        super.initializeData();
+        mNames = mEngine;
+    }
+
     private void refreshData() {
-        mEngine.next();
+        mNames.next();
         mList.getAdapter().notifyDataSetChanged();
         mSwipe.setRefreshing(false);
     }
 
-    public void initializeWidgets() {
-        mEngine = new NameEngine(getContext(), mUserData);
-        mList.setAdapter(new NameAdapter(this, mEngine));
+    @Override
+    protected void initializeWidgets() {
+        mSwipe = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
+        mSwipe.setOnRefreshListener(this);
 
         ImageView icon = (ImageView) this.getActivity().findViewById(R.id.toolbar_icon);
         if (mUserData.isMale()) {
@@ -101,25 +71,4 @@ public class NameFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
-    private void initializeData() {
-        mUserData = UserData.newInstance(getContext());
-        if (mUserData != null) {
-            initializeWidgets();
-        } else {
-            Intent intent = new Intent(getContext(), SetupActivity.class);
-            startActivityForResult(intent, USER_DATA_REQUEST);
-        }
-    }
-
-    @Override
-    public void onCompleted(String meaning) {
-        Toast toast = Toast.makeText(getContext(), meaning, Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-    @Override
-    public void onFailure(String message) {
-        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-        toast.show();
-    }
 }

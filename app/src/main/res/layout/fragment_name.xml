@@ -14,10 +14,18 @@
         android:textAppearance="?attr/textAppearanceListItemSmall" />
 
     <ImageButton
+        android:id="@+id/favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center_vertical"
+        android:background="@drawable/backgroundstate"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:src="@drawable/ic_favorite_border_black_36dp"/>
+    <ImageButton
         android:id="@+id/meaning"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/backgroundstate"
-        android:src="@drawable/ic_zoom_in_black_24dp"/>
+        android:src="@drawable/ic_zoom_in_black_36dp"/>
 </LinearLayout>

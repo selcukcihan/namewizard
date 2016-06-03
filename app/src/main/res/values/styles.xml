@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorPrimary</item>
         <item name="textAppearanceFinish">@style/TextAppearanceFinish</item>
     </style>
 
@@ -51,7 +51,7 @@
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
         <item name="android:textSize">36sp</item>
-        <item name="android:textColor">#ff0099cc</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <!--<item name="android:fontFamily">sans-serif-thin</item>-->
     </style>
 

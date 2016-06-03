@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">İsim Sihirbazı</string>
+    <string name="birth_date">Doğum Tarihi</string>
+    <string name="family_names">Soyadı</string>
+    <string name="female">Kız</string>
+    <string name="finish">Tamam</string>
+    <string name="gender">Cinsiyet</string>
+    <string name="hint_father_name">Baba adı</string>
+    <string name="hint_mother_name">Anne adı</string>
+    <string name="hint_surname">Bebeğin soyadı</string>
+    <string name="label_birth_date">Doğum Tarihi</string>
+    <string name="label_father_name">Baba Adı</string>
+    <string name="label_mother_name">Anne Adı</string>
+    <string name="label_surname">Soyadı</string>
+    <string name="male">Erkek</string>
+    <string name="next">Sonraki</string>
+    <string name="prev">Önceki</string>
+    <string name="review">Özet</string>
+    <string name="waiting">(%1$s) adının anlamı araştırılıyor.</string>
+    <string name="about">Hakkında</string>
+    <string name="settings">Ayarlar</string>
+    <string name="clear_favorites">Favorileri temizle</string>
+    <string name="dialog_clear_favorites">Favoriler temizlenecek.</string>
+    <string name="dialog_title">Emin misiniz?</string>
+    <string name="dialog_ok">Tamam</string>
+    <string name="dialog_cancel">İptal</string>
+    <string name="suggestions">Önerilenler</string>
+    <string name="shortlist">Favoriler</string>
+</resources>

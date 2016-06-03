@@ -14,12 +14,12 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/list"
-            android:name="com.selcukcihan.android.namewizard.NameFragment"
+            android:name="com.selcukcihan.android.namewizard.ShortlistFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/meta_container"
             app:layoutManager="LinearLayoutManager"
-            tools:context="com.selcukcihan.android.namewizard.NameFragment"
+            tools:context="com.selcukcihan.android.namewizard.ShortlistFragment"
             tools:listitem="@layout/fragment_name" />
 
     </android.support.v4.widget.SwipeRefreshLayout>

@@ -48,9 +48,9 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
         void onFailure(String message);
     }
 
-    private NameFragment mListener;
+    private ShortlistFragment mListener;
 
-    public void attach(NameFragment listener) {
+    public void attach(ShortlistFragment listener) {
         mListener = listener;
         mDialog = new ProgressDialog(listener.getContext());
     }
