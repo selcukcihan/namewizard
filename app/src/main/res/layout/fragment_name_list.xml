@@ -23,4 +23,12 @@
             tools:listitem="@layout/fragment_name" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|top"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:visibility="gone"
+        android:text="@string/list_empty" />
 </FrameLayout>

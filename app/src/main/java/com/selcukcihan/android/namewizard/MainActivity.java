@@ -5,14 +5,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,30 +33,28 @@ import com.selcukcihan.android.namewizard.wizard.model.UserData;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ShortlistFragment.OnCompleteListener {
     private ViewPager mPager;
     private MainPagerAdapter mAdapter;
+    private TabPageChangeListener mTabPageChangeListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
-        ImageButton button = (ImageButton) findViewById(R.id.setup);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SetupActivity.class);
-                startActivityForResult(intent, NameFragment.USER_DATA_REQUEST);
-            }
-        });*/
 
         mPager = (ViewPager) findViewById(R.id.pager);
         mAdapter = new MainPagerAdapter(getSupportFragmentManager(), this);
         mPager.setAdapter(mAdapter);
 
+        mTabPageChangeListener = new TabPageChangeListener(0);
+        mPager.addOnPageChangeListener(mTabPageChangeListener);
+
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mPager);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.custom_toolbar);
+        this.setSupportActionBar(toolbar);
     }
 
     @Override
@@ -91,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
         adb.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
-                editor.clear();
+                editor.putString("shortlist", "");
                 editor.commit();
+                mTabPageChangeListener.refresh();
             }
         });
         adb.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
@@ -108,5 +112,52 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public void onComplete(UserData userData) {
+        // Fragment's callback
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mAdapter.notifyDataSetChanged();
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(mPager);
+        //tabLayout.setupWithViewPager(mPager);
+    }
+
+    private final class TabPageChangeListener implements ViewPager.OnPageChangeListener {
+        private int mPreviousPosition;
+
+        public TabPageChangeListener(int previousPosition) {
+            mPreviousPosition = previousPosition;
+        }
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            ShortlistFragment fragment = mAdapter.getRegisteredFragment(mPreviousPosition);
+            if (fragment != null && position != mPreviousPosition) {
+                fragment = mAdapter.getRegisteredFragment(position);
+                fragment.refresh();
+            }
+            mPreviousPosition = position;
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+
+        public void refresh() {
+            ShortlistFragment fragment = mAdapter.getRegisteredFragment(mPreviousPosition);
+            if (fragment != null) {
+                fragment.refresh();
+            }
+        }
     }
 }

@@ -12,17 +12,21 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
  * Created by SELCUKCI on 27.5.2016.
  */
-public class NameEngine extends NameCollection {
+public class NameEngine {
+    private final Context mContext;
+    private final UserData mUserData;
     private final List<List<Name>> mNames;
     private final int[] mFrequencies = {8, 4, 2, 1};
     private final Random mRandom;
@@ -30,14 +34,15 @@ public class NameEngine extends NameCollection {
     private List<Name> mCurrentlyFetched;
 
     public NameEngine(Context context, UserData userData) {
-        super(context, userData);
-
+        mContext = context;
+        mUserData = userData;
         mNames = new ArrayList<>(4);
         mRandom = new Random(seed());
         for (int i = 0; i < mFrequencies.length; i++) {
             mNames.add(new LinkedList<Name>());
         }
-        initializeData("names.txt");
+        //initializeData(Locale.getDefault().getLanguage() + ".txt");
+        initializeData("en.txt");
     }
 
     private int seed() {
@@ -73,41 +78,14 @@ public class NameEngine extends NameCollection {
         }
     }
 
-    public LinkedList<Name> getAll() {
-        LinkedList<Name> names = new LinkedList<>();
-        for (List<Name> n : mNames) {
-            names.addAll(n);
-        }
-        Collections.sort(names);
-        return names;
-    }
-
-    @Override
-    public void next() {
-        mCurrentlyFetched = fetch();
-    }
-
-    @Override
-    public int count() {
-        return mCurrentlyFetched.size();
-    }
-
-    @Override
-    public Name get(int position) {
-        if (position < mCurrentlyFetched.size()) {
-            return mCurrentlyFetched.get(position);
-        }
-        return null;
-    }
-
-    public List<Name> fetch() {
+    public List<Name> next() {
         List<Name> names = new LinkedList<>();
         for (int i = 0; i < 6; i++) {
             mCount++;
             for (int j = 0; j < mFrequencies.length; j++) {
                 if (mCount % mFrequencies[j] == 0) {
                     Name name = getNameFrom(j);
-                    if (name != null) {
+                    if (name != null && !name.in(names)) {
                         names.add(name);
                     }
                     break;
@@ -115,7 +93,12 @@ public class NameEngine extends NameCollection {
             }
         }
         Collections.sort(names);
+        mCurrentlyFetched = names;
         return names;
+    }
+
+    public List<Name> current() {
+        return mCurrentlyFetched;
     }
 
     private void initializeData(String assetName) {
@@ -133,7 +116,7 @@ public class NameEngine extends NameCollection {
                     index = mNames.size() - 1;
                 }
                 if ((tokens[1].compareTo("1") == 0) == mUserData.isMale()) {
-                    mNames.get(index).add(new Name(tokens[0], mUserData.isMale(), freq, tokens[3]));
+                    mNames.get(index).add(new Name(tokens[0], mUserData.isMale(), freq, (tokens.length > 3 ? tokens[3] : "")));
                 }
             }
         } catch (IOException e) {

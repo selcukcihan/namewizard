@@ -27,4 +27,5 @@
     <string name="dialog_cancel">İptal</string>
     <string name="suggestions">Önerilenler</string>
     <string name="shortlist">Favoriler</string>
+    <string name="list_empty">Nothing here…\nMark your favorite names by clicking the heart.</string>
 </resources>

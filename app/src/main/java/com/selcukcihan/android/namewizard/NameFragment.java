@@ -21,6 +21,7 @@ import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 public class NameFragment extends ShortlistFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private NameEngine mEngine;
     private SwipeRefreshLayout mSwipe;
 
     public NameFragment() {
@@ -38,29 +39,21 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
     }
 
     @Override
-    protected void initializeData() {
-        super.initializeData();
-        mNames = mEngine;
-    }
+    protected void initializeStuff() {
+        mEngine = new NameEngine(getContext(), mUserData);
+        mList.setAdapter(new NameAdapter(this, mEngine.next()));
 
-    private void refreshData() {
-        mNames.next();
-        mList.getAdapter().notifyDataSetChanged();
-        mSwipe.setRefreshing(false);
-    }
-
-    @Override
-    protected void initializeWidgets() {
         mSwipe = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
         mSwipe.setOnRefreshListener(this);
 
+        /*
         ImageView icon = (ImageView) this.getActivity().findViewById(R.id.toolbar_icon);
         if (mUserData.isMale()) {
             icon.setImageResource(R.drawable.ic_gender_male_white_36dp);
         } else {
             icon.setImageResource(R.drawable.ic_gender_female_white_36dp);
         }
-        //icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female_white_36dp, getApplicationContext().getTheme()));
+        //icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female_white_36dp, getApplicationContext().getTheme()));*/
 
         mSwipe.post(new Runnable() {
             @Override
@@ -69,6 +62,25 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
                 refreshData();
             }
         });
+    }
+
+    @Override
+    protected void refresh() {
+        NameAdapter adapter = (NameAdapter)mList.getAdapter();
+        Shortlist shortlist = new Shortlist(getContext());
+        adapter.loadShortlist(shortlist);
+        adapter.refreshItems(mEngine.current());
+    }
+
+    private void refreshData() {
+        ((NameAdapter)mList.getAdapter()).refreshItems(mEngine.next());
+        mSwipe.setRefreshing(false);
+    }
+
+    @Override
+    protected void launchActivity() {
+        Intent intent = new Intent(getContext(), SetupActivity.class);
+        startActivityForResult(intent, USER_DATA_REQUEST);
     }
 
 }

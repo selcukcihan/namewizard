@@ -44,7 +44,7 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
     }
 
     public interface HttpPerformingTaskListener {
-        void onCompleted(String meaning);
+        void onCompleted(Name name);
         void onFailure(String message);
     }
 
@@ -91,8 +91,8 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
             mDialog.dismiss();
         }
         if (meaning != null && !meaning.isEmpty()) {
-            mListener.onCompleted(meaning);
             mName.setMeaning(meaning);
+            mListener.onCompleted(mName);
         } else {
             if (mException != null) {
                 mListener.onFailure(mException.getLocalizedMessage());

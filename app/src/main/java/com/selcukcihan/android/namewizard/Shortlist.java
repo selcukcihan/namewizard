@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,30 +14,37 @@ import java.util.List;
  */
 public class Shortlist {
     private final Context mContext;
-    private List<String> mNames;
+    private List<Name> mNames;
+    private static final String SEPARATOR = "#";
     public Shortlist(Context context) {
         mContext = context;
         init();
     }
 
-    public List<String> getAll() {
+    public List<Name> getAll() {
+        Collections.sort(mNames);
         return mNames;
     }
 
     public boolean has(Name name) {
-        Log.e("Shortlist", "has " + name.id() + " - " + name.toString() + " - " + (mNames.contains(name.id()) ? "found" : "not found"));
-        return mNames.contains(name.id());
+        Log.e("Shortlist", "has " + name.id() + " - " + name.toString() + " - " + (name.in(mNames) ? "found" : "not found"));
+        return name.in(mNames);
     }
 
     public void add(Name name) {
         Log.e("Shortlist", "add: " + name.id());
-        mNames.add(name.id());
+        mNames.add(name);
         persist();
     }
 
     public void remove(Name name) {
         Log.e("Shortlist", "del: " + name.id());
-        mNames.remove(name);
+        for (Name n : mNames) {
+            if (n.male() == name.male() && n.compareTo(name) == 0) {
+                mNames.remove(n);
+                break;
+            }
+        }
         persist();
     }
 
@@ -46,9 +54,11 @@ public class Shortlist {
         Log.e("Shortlist", "Shortlist init");
         if (prefs.contains("shortlist")) {
             String str = prefs.getString("shortlist", "");
-            String [] ids = str.split(" ");
-            for (int i = 0; i < ids.length; i++) {
-                mNames.add(ids[i]);
+            if (!str.isEmpty()) {
+                String[] serialized = str.split(SEPARATOR);
+                for (int i = 0; i < serialized.length; i++) {
+                    mNames.add(new Name(serialized[i]));
+                }
             }
         }
         Log.e("Shortlist", "initialized: " + serialize());
@@ -64,12 +74,10 @@ public class Shortlist {
 
     private String serialize() {
         StringBuilder str = new StringBuilder();
-        for (String id : mNames) {
-            str.append(id);
-            str.append(" ");
+        for (Name n : mNames) {
+            str.append(n.serialize()).append(SEPARATOR);
         }
         return str.toString();
     }
-
 
 }

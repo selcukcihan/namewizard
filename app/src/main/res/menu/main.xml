@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:id="@+id/menu_item_settings"
+        app:showAsAction="always"
+        android:icon="@drawable/settings"
         android:title="@string/settings"/>
     <item
         android:id="@+id/menu_item_clear_favorites"
+        app:showAsAction="never"
         android:title="@string/clear_favorites"/>
     <item android:id="@+id/menu_item_about"
         android:title="@string/about"
