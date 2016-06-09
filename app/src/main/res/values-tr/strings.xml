@@ -27,5 +27,7 @@
     <string name="dialog_cancel">İptal</string>
     <string name="suggestions">Önerilenler</string>
     <string name="shortlist">Favoriler</string>
-    <string name="list_empty">Nothing here…\nMark your favorite names by clicking the heart.</string>
+    <string name="list_empty">Favorileriniz boş…\nBeğendiğiniz isimleri yanlarındaki kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.</string>
+    <string name="about_one"><a href="http://selcukcihan.github.io/">Selçuk Cihan</a> tarafından geliştirilmiştir.</string>
+    <string name="about_two">İsimler <a href="http://tdk.gov.tr">Türk Dil Kurumu</a>\'ndan alınmıştır.</string>
 </resources>

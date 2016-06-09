@@ -7,11 +7,11 @@
     <string name="review">Review</string>
 
     <string name="label_mother_name">Mother</string>
-    <string name="hint_mother_name">Name of the mother</string>
+    <string name="hint_mother_name">Mother\'s name</string>
     <string name="label_father_name">Father</string>
-    <string name="hint_father_name">Name of the father</string>
+    <string name="hint_father_name">Father\'s name</string>
     <string name="label_surname">Family Name</string>
-    <string name="hint_surname">Surname of baby</string>
+    <string name="hint_surname">Surname</string>
     <string name="label_birth_date">Birth Date</string>
 
     <string name="male">Male</string>
@@ -19,8 +19,8 @@
 
     <string name="gender">Gender</string>
     <string name="birth_date">Expected Birth Date</string>
-    <string name="family_names">Family Names</string>
-    <string name="waiting">(%1$s) adının anlamı araştırılıyor.</string>
+    <string name="family_names">Family Name</string>
+    <string name="waiting">Fetching the meaning of (%1$s).</string>
     <string name="about">About</string>
     <string name="settings">Settings</string>
     <string name="clear_favorites">Clear favorites</string>
@@ -30,6 +30,7 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="suggestions">Suggested</string>
     <string name="shortlist">Favorites</string>
-    <string name="list_empty"><![CDATA[Nothing here… <br /> Mark your favorite names by clicking the heart icon next to them.]]></string>
-
+    <string name="list_empty">Nothing here…\nMark your favorite names by clicking the heart.</string>
+    <string name="about_one">Developed by <a href="http://selcukcihan.github.io/">Selçuk Cihan</a>.</string>
+    <string name="about_two">Names were taken from the <a href="https://www.ssa.gov/oact/babynames/limits.html">Official Social Security Website</a>.</string>
 </resources>

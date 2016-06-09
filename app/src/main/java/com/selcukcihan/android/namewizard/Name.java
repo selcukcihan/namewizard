@@ -33,6 +33,7 @@ public class Name implements Comparable<Name> {
         } else {
             mId = "";
         }
+        mMeaning = "";
     }
 
     public String serialize() {

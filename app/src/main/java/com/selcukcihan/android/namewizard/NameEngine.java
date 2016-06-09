@@ -1,19 +1,13 @@
 package com.selcukcihan.android.namewizard;
 
 import android.content.Context;
-import android.os.Message;
 
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.Collator;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -27,22 +21,42 @@ import java.util.Random;
 public class NameEngine {
     private final Context mContext;
     private final UserData mUserData;
-    private final List<List<Name>> mNames;
-    private final int[] mFrequencies = {8, 4, 2, 1};
-    private final Random mRandom;
-    private int mCount = 0;
+    private final NameCollection mNames;
+    private final MyRandom mRandom;
+    private int mBucketPointer = 0;
     private List<Name> mCurrentlyFetched;
+    private final int[] mBucketIndices;
 
     public NameEngine(Context context, UserData userData) {
         mContext = context;
         mUserData = userData;
-        mNames = new ArrayList<>(4);
-        mRandom = new Random(seed());
-        for (int i = 0; i < mFrequencies.length; i++) {
-            mNames.add(new LinkedList<Name>());
+        mNames = new NameCollection(context, userData, MyLocale.getLanguage()); // Locale.getDefault().getLanguage() + ".txt"
+        mRandom = new MyRandom(seed());
+        mBucketIndices = new int[mNames.TotalFrequency];
+        computeBucketIndices();
+    }
+
+    private void computeBucketIndices() {
+        for (int i = 0; i < mBucketIndices.length; i++) {
+            mBucketIndices[i] = -1;
         }
-        //initializeData(Locale.getDefault().getLanguage() + ".txt");
-        initializeData("en.txt");
+        for (int i = mNames.Buckets.size() - 1; i >= 0; i--) {
+            int k = 0;
+            for (int j = 0; j < mNames.Buckets.get(i).Weight; j++) {
+                boolean skipped = true;
+                while(k < mBucketIndices.length){
+                    if (mBucketIndices[k] == -1) {
+                        if (skipped) {
+                            mBucketIndices[k] = i;
+                            skipped = false;
+                        } else {
+                            skipped = true;
+                        }
+                    }
+                    k++;
+                }
+            }
+        }
     }
 
     private int seed() {
@@ -62,15 +76,17 @@ public class NameEngine {
         return (mUserData.getMonth() * 31 + mUserData.getDay() + (mUserData.isMale() ? 1000 : 500) + hash * 10000);
     }
 
-    private Name getNameFrom(int bucketIndex) {
-        List<Name> bucket = mNames.get(bucketIndex);
-        if (bucket.size() > 0) {
-            int index = mRandom.nextInt(bucket.size());
-            Name name = bucket.get(index);
+    private Name getNameFrom(int bucketIndex, boolean forward) {
+        Bucket bucket = mNames.Buckets.get(bucketIndex);
+        if (bucket.Names.size() > 0) {
+            int index = (forward ? mRandom.next(bucket.Names.size()) : mRandom.prev());
+            if (index == -1) {
+                return null;
+            }
+            Name name = bucket.Names.get(index);
             if (Arrays.asList(new String[]{mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name.toString())) {
-                return getNameFrom(bucketIndex);
+                return getNameFrom(bucketIndex, forward);
             } else {
-                //bucket.remove(index);
                 return name;
             }
         } else {
@@ -81,15 +97,13 @@ public class NameEngine {
     public List<Name> next() {
         List<Name> names = new LinkedList<>();
         for (int i = 0; i < 6; i++) {
-            mCount++;
-            for (int j = 0; j < mFrequencies.length; j++) {
-                if (mCount % mFrequencies[j] == 0) {
-                    Name name = getNameFrom(j);
-                    if (name != null && !name.in(names)) {
-                        names.add(name);
-                    }
-                    break;
-                }
+            Name name = getNameFrom(mBucketIndices[mBucketPointer], true);
+            if (name != null && !name.in(names)) {
+                names.add(name);
+            }
+            mBucketPointer++;
+            if (mBucketPointer >= mNames.TotalFrequency) {
+                mBucketPointer = 0;
             }
         }
         Collections.sort(names);
@@ -99,37 +113,5 @@ public class NameEngine {
 
     public List<Name> current() {
         return mCurrentlyFetched;
-    }
-
-    private void initializeData(String assetName) {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(mContext.getAssets().open(assetName)));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] tokens = line.split(" ");
-                long freq = Long.parseLong(tokens[2]);
-                int index = (int)(Math.round(Math.log10(freq / 10000)));
-                if (index < 0) {
-                    index = 0;
-                } else if (index >= mNames.size()) {
-                    index = mNames.size() - 1;
-                }
-                if ((tokens[1].compareTo("1") == 0) == mUserData.isMale()) {
-                    mNames.get(index).add(new Name(tokens[0], mUserData.isMale(), freq, (tokens.length > 3 ? tokens[3] : "")));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            //log the exception
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

@@ -21,6 +21,8 @@ import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 import org.w3c.dom.Text;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -98,7 +100,11 @@ public class ShortlistFragment extends Fragment implements HttpPerformingTask.Ht
         NameAdapter adapter = (NameAdapter)mList.getAdapter();
         Shortlist shortlist = new Shortlist(getContext());
         adapter.loadShortlist(shortlist);
-        List<Name> names = shortlist.getAll();
+
+        List<Name> names = new LinkedList<>();
+        for (Name n : shortlist.getAll()) {
+            names.add(n);
+        }
         handleEmptyOrNot(names);
         adapter.refreshItems(names);
     }
@@ -123,13 +129,13 @@ public class ShortlistFragment extends Fragment implements HttpPerformingTask.Ht
     public void onCompleted(Name name) {
         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
         alertDialog.setTitle(name.toString());
-        alertDialog.setMessage(name.meaning());/*
+        alertDialog.setMessage(name.meaning());
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getContext().getString(R.string.dialog_ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });*/
+                });
         alertDialog.show();
     }
 

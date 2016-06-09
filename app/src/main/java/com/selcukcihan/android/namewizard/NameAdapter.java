@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.selcukcihan.android.namewizard.parser.IMeaningParser;
+import com.selcukcihan.android.namewizard.parser.ParserGenerator;
+
+import org.jsoup.parser.Parser;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,9 +77,12 @@ public class NameAdapter extends RecyclerView.Adapter<NameAdapter.ViewHolder> {
         holder.mMeaning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HttpPerformingTask task = new HttpPerformingTask(mNames.get(position));
-                task.attach(mNameFragment);
-                task.execute();
+                IMeaningParser parser = ParserGenerator.generate(mNames.get(position));
+                if (parser != null) {
+                    HttpPerformingTask task = new HttpPerformingTask(parser);
+                    task.attach(mNameFragment);
+                    task.execute();
+                }
             }
         });
     }

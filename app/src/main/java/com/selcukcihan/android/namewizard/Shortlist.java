@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,10 +16,12 @@ import java.util.List;
  */
 public class Shortlist {
     private final Context mContext;
+    private final UserData mUserData;
     private List<Name> mNames;
     private static final String SEPARATOR = "#";
     public Shortlist(Context context) {
         mContext = context;
+        mUserData = UserData.newInstance(mContext);
         init();
     }
 
@@ -52,8 +56,9 @@ public class Shortlist {
         mNames = new LinkedList<>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
         Log.e("Shortlist", "Shortlist init");
-        if (prefs.contains("shortlist")) {
-            String str = prefs.getString("shortlist", "");
+        if (mUserData != null) {
+            String prefString = mUserData.isMale() ? "male shortlist" : "female shortlist";
+            String str = prefs.contains(prefString) ? prefs.getString(prefString, "") : "";
             if (!str.isEmpty()) {
                 String[] serialized = str.split(SEPARATOR);
                 for (int i = 0; i < serialized.length; i++) {
@@ -68,8 +73,10 @@ public class Shortlist {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
         String str = serialize();
         Log.e("Shortlist", "persist: " + str);
-        editor.putString("shortlist", str);
-        editor.commit();
+        if (mUserData != null) {
+            editor.putString(mUserData.isMale() ? "male shortlist" : "female shortlist", str);
+            editor.commit();
+        }
     }
 
     private String serialize() {

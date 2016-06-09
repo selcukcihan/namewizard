@@ -1,5 +1,8 @@
 package com.selcukcihan.android.namewizard;
 
+import com.selcukcihan.android.namewizard.parser.IMeaningParser;
+import com.selcukcihan.android.namewizard.wizard.model.UserData;
+
 import junit.framework.Test;
 import junit.framework.TestResult;
 
@@ -32,28 +35,22 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by Selcuk on 16.2.2016.
  */
 public class HttpCommunicator {
+    private final IMeaningParser mParser;
+
+    public HttpCommunicator(IMeaningParser parser) {
+        mParser = parser;
+    }
 
     public String fetch(String url) throws IOException {
         String response = performGetCall(url);
-        return parseResponse(response);
-    }
-
-    private String parseResponse(String response) {
-        Document doc = Jsoup.parse(response);
-
-        Element e = doc.select("td:containsOwn(Anlam:)").first();
-        e = (e != null ? e.nextElementSibling() : null);
-        if (e != null) {
-            return e.text();
-        }
-        return "";
+        return mParser.parse(response);
     }
 
     private String performGetCall(String urlString) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         try {
-            //InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            urlConnection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             String inputLine;
             StringBuffer response = new StringBuffer();

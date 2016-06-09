@@ -6,6 +6,8 @@ import android.os.AsyncTask;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
+import com.selcukcihan.android.namewizard.parser.IMeaningParser;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -36,11 +38,11 @@ import javax.net.ssl.HttpsURLConnection;
 public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
 
     private ProgressDialog mDialog;
-    private Name mName;
+    private final IMeaningParser mParser;
 
-    public HttpPerformingTask(Name name) {
+    public HttpPerformingTask(IMeaningParser parser) {
         super();
-        mName = name;
+        mParser = parser;
     }
 
     public interface HttpPerformingTaskListener {
@@ -58,16 +60,14 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
     private Exception mException;
     protected String doInBackground(Void... params) {
         try {
-            if (mName == null) {
+            if (mParser.name() == null) {
                 return "";
             }
-            if (mName.meaning().isEmpty()) {
-                HttpCommunicator communicator = new HttpCommunicator();
-
-                String url = "http://tdk.gov.tr/index.php?option=com_kisiadlari&arama=anlami&uid=" + mName.id() + "&guid=TDK.GTS.574e945ee2b1b4.87498362";
-                return communicator.fetch(url);
+            if (mParser.name().meaning().isEmpty()) {
+                HttpCommunicator communicator = new HttpCommunicator(mParser);
+                return communicator.fetch(mParser.generateUrl());
             } else {
-                return mName.meaning();
+                return mParser.name().meaning();
             }
         } catch (Exception ex) {
             mException = ex;
@@ -77,8 +77,8 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        if (mName != null) {
-            mDialog.setMessage(String.format(mDialog.getContext().getResources().getString(R.string.waiting), mName.toString()));
+        if (mParser.name() != null) {
+            mDialog.setMessage(String.format(mDialog.getContext().getResources().getString(R.string.waiting), mParser.name().toString()));
             mDialog.show();
         }
     }
@@ -91,12 +91,12 @@ public class HttpPerformingTask extends AsyncTask<Void, Void, String> {
             mDialog.dismiss();
         }
         if (meaning != null && !meaning.isEmpty()) {
-            mName.setMeaning(meaning);
-            mListener.onCompleted(mName);
+            mParser.name().setMeaning(meaning);
+            mListener.onCompleted(mParser.name());
         } else {
             if (mException != null) {
                 mListener.onFailure(mException.getLocalizedMessage());
-            } else if (mName != null) {
+            } else if (mParser.name() != null) {
                 mListener.onFailure("name not found");
             }
         }
