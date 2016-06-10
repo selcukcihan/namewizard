@@ -18,6 +18,7 @@ package com.selcukcihan.android.namewizard.wizard.model;
 
 import com.selcukcihan.android.namewizard.wizard.ui.SingleChoiceFragment;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
@@ -30,8 +31,8 @@ import java.util.Arrays;
 public class SingleFixedChoicePage extends Page {
     protected ArrayList<String> mChoices = new ArrayList<String>();
 
-    public SingleFixedChoicePage(ModelCallbacks callbacks, String title) {
-        super(callbacks, title);
+    public SingleFixedChoicePage(Context context, ModelCallbacks callbacks, String title) {
+        super(context, callbacks, title);
     }
 
     @Override

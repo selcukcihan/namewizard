@@ -18,6 +18,7 @@ package com.selcukcihan.android.namewizard.wizard.model;
 
 import com.selcukcihan.android.namewizard.wizard.ui.MultipleChoiceFragment;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ import java.util.ArrayList;
  * A page offering the user a number of non-mutually exclusive choices.
  */
 public class MultipleFixedChoicePage extends SingleFixedChoicePage {
-    public MultipleFixedChoicePage(ModelCallbacks callbacks, String title) {
-        super(callbacks, title);
+    public MultipleFixedChoicePage(Context context, ModelCallbacks callbacks, String title) {
+        super(context, callbacks, title);
     }
 
     @Override

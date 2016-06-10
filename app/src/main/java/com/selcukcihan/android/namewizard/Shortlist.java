@@ -31,18 +31,15 @@ public class Shortlist {
     }
 
     public boolean has(Name name) {
-        Log.e("Shortlist", "has " + name.id() + " - " + name.toString() + " - " + (name.in(mNames) ? "found" : "not found"));
         return name.in(mNames);
     }
 
     public void add(Name name) {
-        Log.e("Shortlist", "add: " + name.id());
         mNames.add(name);
         persist();
     }
 
     public void remove(Name name) {
-        Log.e("Shortlist", "del: " + name.id());
         for (Name n : mNames) {
             if (n.male() == name.male() && n.compareTo(name) == 0) {
                 mNames.remove(n);
@@ -55,7 +52,6 @@ public class Shortlist {
     private void init() {
         mNames = new LinkedList<>();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        Log.e("Shortlist", "Shortlist init");
         if (mUserData != null) {
             String prefString = mUserData.isMale() ? "male shortlist" : "female shortlist";
             String str = prefs.contains(prefString) ? prefs.getString(prefString, "") : "";
@@ -66,13 +62,11 @@ public class Shortlist {
                 }
             }
         }
-        Log.e("Shortlist", "initialized: " + serialize());
     }
 
     private void persist() {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
         String str = serialize();
-        Log.e("Shortlist", "persist: " + str);
         if (mUserData != null) {
             editor.putString(mUserData.isMale() ? "male shortlist" : "female shortlist", str);
             editor.commit();

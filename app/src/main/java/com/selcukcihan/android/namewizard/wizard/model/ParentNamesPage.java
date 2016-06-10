@@ -16,8 +16,10 @@
 
 package com.selcukcihan.android.namewizard.wizard.model;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
+import com.selcukcihan.android.namewizard.R;
 import com.selcukcihan.android.namewizard.wizard.ui.ParentNamesFragment;
 
 import java.util.ArrayList;
@@ -30,8 +32,8 @@ public class ParentNamesPage extends Page {
     public static final String FATHER_DATA_KEY = "father";
     public static final String SURNAME_DATA_KEY = "surname";
 
-    public ParentNamesPage(ModelCallbacks callbacks, String title) {
-        super(callbacks, title);
+    public ParentNamesPage(Context context, ModelCallbacks callbacks, String title) {
+        super(context, callbacks, title);
     }
 
     @Override
@@ -41,8 +43,8 @@ public class ParentNamesPage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-        dest.add(new ReviewItem("Mother's name", mData.getString(MOTHER_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Father's name", mData.getString(FATHER_DATA_KEY), getKey(), -1));
-        dest.add(new ReviewItem("Surname", mData.getString(SURNAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem(mContext.getString(R.string.hint_mother_name), mData.getString(MOTHER_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem(mContext.getString(R.string.hint_father_name), mData.getString(FATHER_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem(mContext.getString(R.string.hint_surname), mData.getString(SURNAME_DATA_KEY), getKey(), -1));
     }
 }

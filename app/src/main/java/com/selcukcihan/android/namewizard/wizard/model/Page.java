@@ -16,6 +16,7 @@
 
 package com.selcukcihan.android.namewizard.wizard.model;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -32,6 +33,8 @@ public abstract class Page implements PageTreeNode {
 
     protected ModelCallbacks mCallbacks;
 
+    protected final Context mContext;
+
     /**
      * Current wizard values/selections.
      */
@@ -40,7 +43,8 @@ public abstract class Page implements PageTreeNode {
     protected boolean mRequired = false;
     protected String mParentKey;
 
-    protected Page(ModelCallbacks callbacks, String title) {
+    protected Page(Context context, ModelCallbacks callbacks, String title) {
+        mContext = context;
         mCallbacks = callbacks;
         mTitle = title;
     }

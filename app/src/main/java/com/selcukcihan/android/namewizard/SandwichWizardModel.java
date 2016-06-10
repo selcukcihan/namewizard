@@ -32,11 +32,11 @@ public class SandwichWizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new SingleFixedChoicePage(this, mContext.getString(R.string.gender)).setChoices(
+                new SingleFixedChoicePage(mContext, this, mContext.getString(R.string.gender)).setChoices(
                         mContext.getString(R.string.male),
                         mContext.getString(R.string.female)).setRequired(true),
-                new BirthDatePage(this, mContext.getString(R.string.birth_date)).setRequired(true),
-                new ParentNamesPage(this, mContext.getString(R.string.family_names))
+                new BirthDatePage(mContext, this, mContext.getString(R.string.birth_date)).setRequired(true),
+                new ParentNamesPage(mContext, this, mContext.getString(R.string.family_names))
         );
     }
 }

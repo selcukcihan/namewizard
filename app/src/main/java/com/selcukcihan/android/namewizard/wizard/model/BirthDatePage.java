@@ -16,6 +16,7 @@
 
 package com.selcukcihan.android.namewizard.wizard.model;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.selcukcihan.android.namewizard.wizard.ui.BirthDateFragment;
@@ -32,8 +33,8 @@ public class BirthDatePage extends Page {
     public static final String MONTH_KEY = "month";
     public static final String DAY_KEY = "day";
 
-    public BirthDatePage(ModelCallbacks callbacks, String title) {
-        super(callbacks, title);
+    public BirthDatePage(Context context, ModelCallbacks callbacks, String title) {
+        super(context, callbacks, title);
     }
 
     @Override
