@@ -30,4 +30,8 @@
     <string name="list_empty">Favorileriniz boş…\nBeğendiğiniz isimleri yanlarındaki kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.</string>
     <string name="about_one"><a href="http://selcukcihan.github.io/">Selçuk Cihan</a> tarafından geliştirilmiştir.</string>
     <string name="about_two">İsimler <a href="http://tdk.gov.tr">Türk Dil Kurumu</a>\'ndan alınmıştır.</string>
+    <string name="list_empty_swipe">Başlangıca döndünüz. İsimleri görüntülemek için ekranı aşağı çekiniz.</string>
+    <string name="first_time_title">Nasıl kullanılır</string>
+    <string name="first_time_message">* Ekranı aşağı/yukarı kaydırarak isimler arasında geçiş yapabilirsiniz.\n\n* Beğendiğiniz isimleri, kalp işaretine tıklayarak kaydetmeyi unutmayın!\n\n* Allah analı babalı büyütsün, tebrikler.</string>
+    <string name="usage">Kullanım</string>
 </resources>

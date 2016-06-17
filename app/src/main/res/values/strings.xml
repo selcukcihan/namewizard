@@ -33,4 +33,8 @@
     <string name="list_empty">Nothing here…\nMark your favorite names by clicking the heart.</string>
     <string name="about_one">Developed by <a href="http://selcukcihan.github.io/">Selçuk Cihan</a>.</string>
     <string name="about_two">Names were taken from the <a href="https://www.ssa.gov/oact/babynames/limits.html">Official Social Security Website</a>.</string>
+    <string name="list_empty_swipe">You are back at the beginning. Pull down for names.</string>
+    <string name="first_time_title">How do i use this</string>
+    <string name="first_time_message">* You can browse through names by swiping down/up on the names list.\n\n* Don\'t forget to mark your favourite names, by clicking on the heart icon!\n\n* Wish you all the best, including the new member of your family.</string>
+    <string name="usage">Usage</string>
 </resources>

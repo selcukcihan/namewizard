@@ -61,6 +61,37 @@ public class MainActivity extends AppCompatActivity implements ShortlistFragment
         this.setSupportActionBar(toolbar);
     }
 
+    private boolean checkFirstTime() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        if (prefs.contains("first_time")) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (checkFirstTime()) {
+            displayUsage();
+
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit();
+            editor.putString("first_time", "");
+            editor.commit();
+        }
+    }
+
+    private boolean displayUsage() {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle(getString(R.string.first_time_title))
+                .setMessage(getString(R.string.first_time_message))
+                .setIcon(android.R.drawable.ic_menu_help)
+                .show();
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -68,6 +99,8 @@ public class MainActivity extends AppCompatActivity implements ShortlistFragment
                 return handleSettings();
             case R.id.menu_item_clear_favorites:
                 return handleClearFavorites();
+            case R.id.menu_item_usage:
+                return displayUsage();
             case R.id.menu_item_about:
                 return handleAbout();
             default:
@@ -85,16 +118,6 @@ public class MainActivity extends AppCompatActivity implements ShortlistFragment
         ((TextView) dialog.findViewById(R.id.selcuk)).setMovementMethod(LinkMovementMethod.getInstance());
         ((TextView) dialog.findViewById(R.id.database)).setMovementMethod(LinkMovementMethod.getInstance());
         dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, R.mipmap.ic_launcher);
-        /*
-        alertDialog.setView(R.layout.about_view);
-
-        alertDialog.setMessage("Alert message to be shown");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });*/
         dialog.show();
         return true;
     }

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
 import org.w3c.dom.Text;
@@ -93,7 +94,7 @@ public class ShortlistFragment extends Fragment implements HttpPerformingTask.Ht
         List<Name> names = shortlist.getAll();
         handleEmptyOrNot(names);
         mList.setAdapter(new NameAdapter(this, names));
-        ((SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout)).setDistanceToTriggerSync(99999);
+        ((SwipyRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout)).setDistanceToTriggerSync(99999);
     }
 
     protected void refresh() {

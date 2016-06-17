@@ -12,7 +12,6 @@
         android:name="com.selcukcihan.android.namewizard.NameFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/meta_container"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.selcukcihan.android.namewizard.NameFragment"
         tools:listitem="@layout/fragment_name" />

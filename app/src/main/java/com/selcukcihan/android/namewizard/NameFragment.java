@@ -16,13 +16,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayout;
+import com.orangegangsters.github.swipyrefreshlayout.library.SwipyRefreshLayoutDirection;
 import com.selcukcihan.android.namewizard.wizard.model.UserData;
 
+import java.util.List;
 
-public class NameFragment extends ShortlistFragment implements SwipeRefreshLayout.OnRefreshListener {
+
+public class NameFragment extends ShortlistFragment implements SwipyRefreshLayout.OnRefreshListener {
 
     private NameEngine mEngine;
-    private SwipeRefreshLayout mSwipe;
+    private SwipyRefreshLayout mSwipe;
 
     public NameFragment() {
         // Required empty public constructor
@@ -34,16 +38,11 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
     }
 
     @Override
-    public void onRefresh() {
-        refreshData();
-    }
-
-    @Override
     protected void initializeStuff() {
         mEngine = new NameEngine(getContext(), mUserData);
         mList.setAdapter(new NameAdapter(this, mEngine.next()));
 
-        mSwipe = (SwipeRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
+        mSwipe = (SwipyRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout);
         mSwipe.setOnRefreshListener(this);
 
         /*
@@ -54,14 +53,15 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
             icon.setImageResource(R.drawable.ic_gender_female_white_36dp);
         }
         //icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_gender_female_white_36dp, getApplicationContext().getTheme()));*/
-
+        /*
         mSwipe.post(new Runnable() {
             @Override
             public void run() {
                 mSwipe.setRefreshing(true);
-                refreshData();
+                refreshData(true);
             }
-        });
+        });*/
+        ((SwipyRefreshLayout) getView().findViewById(R.id.swipe_refresh_layout)).setDistanceToTriggerSync(50);
     }
 
     @Override
@@ -69,11 +69,13 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
         NameAdapter adapter = (NameAdapter)mList.getAdapter();
         Shortlist shortlist = new Shortlist(getContext());
         adapter.loadShortlist(shortlist);
-        adapter.refreshItems(mEngine.current());
+        List<Name> names = mEngine.current();
+        adapter.refreshItems(names);
     }
 
-    private void refreshData() {
-        ((NameAdapter)mList.getAdapter()).refreshItems(mEngine.next());
+    private void refreshData(boolean next) {
+        List<Name> names = (next ? mEngine.next() : mEngine.prev());
+        ((NameAdapter)mList.getAdapter()).refreshItems(names);
         mSwipe.setRefreshing(false);
     }
 
@@ -83,4 +85,8 @@ public class NameFragment extends ShortlistFragment implements SwipeRefreshLayou
         startActivityForResult(intent, USER_DATA_REQUEST);
     }
 
+    @Override
+    public void onRefresh(SwipyRefreshLayoutDirection direction) {
+        refreshData(direction == SwipyRefreshLayoutDirection.TOP);
+    }
 }

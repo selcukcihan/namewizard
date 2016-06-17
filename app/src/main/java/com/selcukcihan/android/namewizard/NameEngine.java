@@ -27,12 +27,16 @@ public class NameEngine {
     private List<Name> mCurrentlyFetched;
     private final int[] mBucketIndices;
 
+    private List<List<Name>> mFetched;
+    private int mPageIndex = -1;
+
     public NameEngine(Context context, UserData userData) {
         mContext = context;
         mUserData = userData;
         mNames = new NameCollection(context, userData, MyLocale.getLanguage()); // Locale.getDefault().getLanguage() + ".txt"
         mRandom = new MyRandom(seed());
         mBucketIndices = new int[mNames.TotalFrequency];
+        mFetched = new LinkedList<>();
         computeBucketIndices();
     }
 
@@ -64,7 +68,7 @@ public class NameEngine {
         int hash = 0;
         try {
             md = MessageDigest.getInstance("MD5");
-            byte[] bytesOfMessage = (mUserData.getFather() + " " + mUserData.getMother() + " " + mUserData.getSurname()).getBytes("UTF-8");
+            byte[] bytesOfMessage = (mUserData.getFather() + " " + mUserData.getMother() + " " + mUserData.getSurname() + " " + System.currentTimeMillis()).getBytes("UTF-8");
             byte[] thedigest = md.digest(bytesOfMessage);
             ByteBuffer wrapped = ByteBuffer.wrap(thedigest); // big-endian by default
             hash = wrapped.getShort();
@@ -83,6 +87,9 @@ public class NameEngine {
             if (index == -1) {
                 return null;
             }
+            if (index >= bucket.Names.size()) {
+                return null;
+            }
             Name name = bucket.Names.get(index);
             if (Arrays.asList(new String[]{mUserData.getSurname(), mUserData.getFather(), mUserData.getMother()}).contains(name.toString())) {
                 return getNameFrom(bucketIndex, forward);
@@ -95,20 +102,39 @@ public class NameEngine {
     }
 
     public List<Name> next() {
-        List<Name> names = new LinkedList<>();
-        for (int i = 0; i < 6; i++) {
-            Name name = getNameFrom(mBucketIndices[mBucketPointer], true);
-            if (name != null && !name.in(names)) {
-                names.add(name);
+        if (mPageIndex + 1 == mFetched.size()){
+            List<Name> names = new LinkedList<>();
+            for (int i = 0; i < 6; i++) {
+                Name name = getNameFrom(mBucketIndices[mBucketPointer], true);
+                if (name != null && !name.in(names)) {
+                    names.add(name);
+                }
+                mBucketPointer++;
+                if (mBucketPointer >= mNames.TotalFrequency) {
+                    mBucketPointer = 0;
+                }
             }
-            mBucketPointer++;
-            if (mBucketPointer >= mNames.TotalFrequency) {
-                mBucketPointer = 0;
-            }
+            Collections.sort(names);
+            mCurrentlyFetched = names;
+            mFetched.add(mCurrentlyFetched);
+            mPageIndex++;
+            return names;
+        } else {
+            mPageIndex++;
+            mCurrentlyFetched = mFetched.get(mPageIndex);
+            return mCurrentlyFetched;
         }
-        Collections.sort(names);
-        mCurrentlyFetched = names;
-        return names;
+    }
+
+    public List<Name> prev() {
+        if (mPageIndex <= 0) {
+            mPageIndex = 0;
+            return mCurrentlyFetched;
+        } else {
+            mPageIndex--;
+            mCurrentlyFetched = mFetched.get(mPageIndex);
+            return mCurrentlyFetched;
+        }
     }
 
     public List<Name> current() {
